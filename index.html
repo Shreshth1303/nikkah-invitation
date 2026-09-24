@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Abdul Raheem & Shadab Fatima | Nikah Invitation</title>
+  <meta name="description" content="Join us in celebrating the Nikah of Abdul Raheem and Shadab Fatima on 29 November 2026." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Abdul Raheem & Shadab Fatima | Nikah Invitation" />
+  <meta property="og:description" content="Join us in celebrating the Nikah of Abdul Raheem and Shadab Fatima on 29 November 2026." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/og-preview.png" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Abdul Raheem & Shadab Fatima | Nikah Invitation" />
+  <meta name="twitter:description" content="Join us in celebrating the Nikah of Abdul Raheem and Shadab Fatima on 29 November 2026." />
+
+  <!-- Theme -->
+  <meta name="theme-color" content="#172033" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Outfit:wght@200;300;400;500;600&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+
+  <!-- ============================================================ -->
+  <!-- OPENING SCREEN (Cover) -->
+  <!-- ============================================================ -->
+  <div id="cover-screen" class="cover-screen">
+    <!-- Dynamic Flower Petals Canvas -->
+    <canvas id="flower-canvas" class="flower-canvas" aria-hidden="true"></canvas>
+
+    <div class="cover-content">
+      <div class="cover-ornament anim-item" data-delay="0">
+        <svg viewBox="0 0 120 40" class="ornament-svg">
+          <path d="M10 20 Q30 5 60 20 Q90 35 110 20" fill="none" stroke="#C9A45C" stroke-width="1.2"/>
+          <path d="M10 20 Q30 35 60 20 Q90 5 110 20" fill="none" stroke="#C9A45C" stroke-width="1.2"/>
+          <circle cx="60" cy="20" r="3" fill="#C9A45C"/>
+          <circle cx="10" cy="20" r="2" fill="#C9A45C"/>
+          <circle cx="110" cy="20" r="2" fill="#C9A45C"/>
+        </svg>
+      </div>
+
+      <p class="cover-bismillah anim-item" data-delay="1">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</p>
+      <p class="cover-bismillah-en anim-item" data-delay="2">In the name of Allah<br><span class="cover-bismillah-sub">The most beneficent and most merciful</span></p>
+
+      <div class="cover-ornament-divider anim-item" data-delay="2">
+        <svg viewBox="0 0 200 12" class="divider-svg">
+          <line x1="0" y1="6" x2="80" y2="6" stroke="#C9A45C" stroke-width="0.8"/>
+          <polygon points="95,2 100,6 95,10" fill="#C9A45C"/>
+          <polygon points="105,2 100,6 105,10" fill="#C9A45C"/>
+          <line x1="120" y1="6" x2="200" y2="6" stroke="#C9A45C" stroke-width="0.8"/>
+        </svg>
+      </div>
+
+      <h1 class="cover-groom anim-item" data-delay="2.5">Abdul Raheem</h1>
+      <span class="cover-ampersand anim-item" data-delay="3.5">&</span>
+      <h1 class="cover-bride anim-item" data-delay="4">Shadab Fatima</h1>
+
+      <p class="cover-inshallah anim-item" data-delay="5">InshaAllah</p>
+
+      <div class="cover-date anim-item" data-delay="5.5">
+        <span class="cover-day">SUNDAY</span>
+        <span class="cover-date-num">29 NOVEMBER</span>
+        <span class="cover-year">2026</span>
+      </div>
+
+      <div class="cover-countdown anim-item" data-delay="6">
+        <div class="mini-countdown" id="cover-countdown">
+          <div class="mini-countdown-unit">
+            <span class="mini-countdown-num" id="cover-days">--</span>
+            <span class="mini-countdown-label">DAYS</span>
+          </div>
+          <div class="mini-countdown-sep">:</div>
+          <div class="mini-countdown-unit">
+            <span class="mini-countdown-num" id="cover-hours">--</span>
+            <span class="mini-countdown-label">HOURS</span>
+          </div>
+          <div class="mini-countdown-sep">:</div>
+          <div class="mini-countdown-unit">
+            <span class="mini-countdown-num" id="cover-mins">--</span>
+            <span class="mini-countdown-label">MIN</span>
+          </div>
+          <div class="mini-countdown-sep">:</div>
+          <div class="mini-countdown-unit">
+            <span class="mini-countdown-num" id="cover-secs">--</span>
+            <span class="mini-countdown-label">SEC</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="cover-btn anim-item" data-delay="7" id="open-invitation-btn" aria-label="Open Invitation">
+        ✦ OPEN INVITATION
+      </button>
+    </div>
+
+    <!-- Split panels for transition -->
+    <div class="cover-panel cover-panel-left"></div>
+    <div class="cover-panel cover-panel-right"></div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MAIN INVITATION -->
+  <!-- ============================================================ -->
+  <main id="main-invitation" class="main-invitation" aria-hidden="true">
+
+    <!-- SECTION 2: COUPLE -->
+    <section id="section-couple" class="section section-couple scroll-reveal">
+      <div class="section-inner">
+        <div class="gold-ornament-top">
+          <svg viewBox="0 0 120 40" class="ornament-svg">
+            <path d="M10 20 Q30 5 60 20 Q90 35 110 20" fill="none" stroke="#C9A45C" stroke-width="1"/>
+            <path d="M10 20 Q30 35 60 20 Q90 5 110 20" fill="none" stroke="#C9A45C" stroke-width="1"/>
+            <circle cx="60" cy="20" r="2.5" fill="#C9A45C"/>
+          </svg>
+        </div>
+        <p class="section-subtitle">WITH THE BLESSINGS OF ALLAH</p>
+        <h2 class="couple-name groom-name">Abdul Raheem</h2>
+        <span class="couple-ampersand">&</span>
+        <h2 class="couple-name bride-name">Shadab Fatima</h2>
+        <div class="couple-sketch-wrap">
+          <div class="sketch-arch-frame">
+            <div class="arch-peak">
+              <svg viewBox="0 0 60 20" class="arch-peak-svg" aria-hidden="true">
+                <path d="M30 2 C25 9 16 15 2 18 C16 16 25 13 30 7 C35 13 44 16 58 18 C44 15 35 9 30 2 Z" fill="#C9A45C"/>
+                <circle cx="30" cy="3" r="2" fill="#C9A45C"/>
+              </svg>
+            </div>
+            <div class="sketch-inner-border">
+              <img 
+                src="/couple-sketch.jpg" 
+                alt="Fine art sketch illustration of Abdul Raheem and Shadab Fatima in Nikah wedding attire" 
+                class="couple-sketch-img"
+                width="280"
+                height="373"
+                loading="eager"
+              />
+            </div>
+          </div>
+        </div>
+        <p class="couple-tagline">"Two souls, one beautiful beginning."</p>
+        <div class="gold-ornament-bottom">
+          <svg viewBox="0 0 200 12" class="divider-svg">
+            <line x1="0" y1="6" x2="80" y2="6" stroke="#C9A45C" stroke-width="0.6"/>
+            <polygon points="95,3 100,6 95,9" fill="#C9A45C"/>
+            <polygon points="105,3 100,6 105,9" fill="#C9A45C"/>
+            <line x1="120" y1="6" x2="200" y2="6" stroke="#C9A45C" stroke-width="0.6"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: NIKAH -->
+    <section id="section-nikah" class="section section-nikah scroll-reveal">
+      <div class="islamic-pattern"></div>
+      <div class="section-inner">
+        <div class="gold-ornament-top">
+          <svg viewBox="0 0 120 40" class="ornament-svg small">
+            <path d="M20 20 Q40 8 60 20 Q80 32 100 20" fill="none" stroke="#C9A45C" stroke-width="1"/>
+            <circle cx="60" cy="20" r="2" fill="#C9A45C"/>
+          </svg>
+        </div>
+        <h2 class="section-heading gold-text">NIKAH</h2>
+        <div class="nikah-details">
+          <p class="nikah-day">SUNDAY</p>
+          <p class="nikah-date">29 NOVEMBER 2026</p>
+          <div class="nikah-divider">
+            <svg viewBox="0 0 100 8" class="mini-divider">
+              <line x1="10" y1="4" x2="42" y2="4" stroke="#C9A45C" stroke-width="0.6"/>
+              <circle cx="50" cy="4" r="2" fill="#C9A45C"/>
+              <line x1="58" y1="4" x2="90" y2="4" stroke="#C9A45C" stroke-width="0.6"/>
+            </svg>
+          </div>
+          <p class="nikah-time">AFTER NAMAZ-E-MAGHRIB</p>
+          <p class="nikah-venue">BEARY'S AMITY</p>
+          <p class="nikah-city">BENGALURU</p>
+        </div>
+        <a href="https://www.google.com/maps/search/Beary's+Amity+Bengaluru" target="_blank" rel="noopener noreferrer" class="btn btn-gold" aria-label="View Nikah Location on Google Maps">
+          <span class="btn-icon">📍</span> VIEW LOCATION
+        </a>
+      </div>
+    </section>
+
+    <!-- SECTION 4: COUNTDOWN -->
+    <section id="section-countdown" class="section section-countdown scroll-reveal">
+      <div class="section-inner">
+        <p class="countdown-heading-pre">UNTIL WE SAY</p>
+        <h2 class="countdown-heading">"QUBOOL HAI"</h2>
+        <div class="countdown-display" id="main-countdown">
+          <div class="countdown-unit">
+            <div class="countdown-num-wrap">
+              <span class="countdown-num" id="main-days">--</span>
+            </div>
+            <span class="countdown-label">DAYS</span>
+          </div>
+          <div class="countdown-unit">
+            <div class="countdown-num-wrap">
+              <span class="countdown-num" id="main-hours">--</span>
+            </div>
+            <span class="countdown-label">HOURS</span>
+          </div>
+          <div class="countdown-unit">
+            <div class="countdown-num-wrap">
+              <span class="countdown-num" id="main-mins">--</span>
+            </div>
+            <span class="countdown-label">MINUTES</span>
+          </div>
+          <div class="countdown-unit">
+            <div class="countdown-num-wrap">
+              <span class="countdown-num" id="main-secs">--</span>
+            </div>
+            <span class="countdown-label">SECONDS</span>
+          </div>
+        </div>
+        <p class="countdown-date">29 NOVEMBER 2026</p>
+        <div id="countdown-complete" class="countdown-complete hidden">
+          <p class="today-text">Today is the day.</p>
+          <div class="today-sparkle">✦</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: RECEPTION -->
+    <section id="section-reception" class="section section-reception scroll-reveal">
+      <div class="section-inner">
+        <div class="gold-ornament-top">
+          <svg viewBox="0 0 120 40" class="ornament-svg small">
+            <path d="M20 20 Q40 8 60 20 Q80 32 100 20" fill="none" stroke="#C9A45C" stroke-width="1"/>
+            <circle cx="60" cy="20" r="2" fill="#C9A45C"/>
+          </svg>
+        </div>
+        <h2 class="section-heading">RECEPTION</h2>
+        <div class="reception-details">
+          <p class="reception-day">TUESDAY</p>
+          <p class="reception-date">8 DECEMBER 2026</p>
+          <div class="nikah-divider">
+            <svg viewBox="0 0 100 8" class="mini-divider">
+              <line x1="10" y1="4" x2="42" y2="4" stroke="#C9A45C" stroke-width="0.6"/>
+              <circle cx="50" cy="4" r="2" fill="#C9A45C"/>
+              <line x1="58" y1="4" x2="90" y2="4" stroke="#C9A45C" stroke-width="0.6"/>
+            </svg>
+          </div>
+          <p class="reception-time">5 PM — 10 PM</p>
+          <p class="reception-venue">SILVERCLOUD PRIVATE RESORT</p>
+          <p class="reception-venue-sub">WEDDING BANQUET HALL</p>
+          <p class="reception-address">CHALALAKKAL, PARAPPUR<br>KERALA 680552</p>
+        </div>
+        <a href="https://www.google.com/maps/search/Silvercloud+Private+Resort+Wedding+Banquet+Hall+Chalalakkal+Parappur+Kerala" target="_blank" rel="noopener noreferrer" class="btn btn-outline" aria-label="Get directions to Reception venue">
+          <span class="btn-icon">📍</span> GET DIRECTIONS
+        </a>
+      </div>
+    </section>
+
+    <!-- EVENT TIMELINE -->
+    <section class="section section-timeline scroll-reveal">
+      <div class="section-inner">
+        <h2 class="section-heading">CELEBRATIONS</h2>
+        <div class="timeline">
+          <div class="timeline-line"></div>
+          <div class="timeline-item scroll-reveal">
+            <div class="timeline-dot"></div>
+            <div class="timeline-date-badge">29 NOV 2026</div>
+            <div class="timeline-content">
+              <h3 class="timeline-title">NIKAH</h3>
+              <p class="timeline-detail">After Namaz-e-Maghrib</p>
+              <p class="timeline-venue">Beary's Amity, Bengaluru</p>
+            </div>
+          </div>
+          <div class="timeline-item scroll-reveal">
+            <div class="timeline-dot"></div>
+            <div class="timeline-date-badge">8 DEC 2026</div>
+            <div class="timeline-content">
+              <h3 class="timeline-title">RECEPTION</h3>
+              <p class="timeline-detail">5 PM – 10 PM</p>
+              <p class="timeline-venue">Silvercloud Private Resort, Kerala</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: FAMILY -->
+    <section id="section-family" class="section section-family scroll-reveal">
+      <div class="section-inner">
+        <h2 class="section-heading">WITH THE BLESSINGS OF<br>OUR FAMILIES</h2>
+
+        <div class="family-group scroll-reveal">
+          <p class="family-parent-name">Mr. Shafi Aboobacker</p>
+          <p class="family-and">&</p>
+          <p class="family-parent-name">Mrs. Shamshad Shafi</p>
+          <p class="family-address">Madathiparambil House<br>Brahmakulam, Guruvayur</p>
+          <p class="family-contact">Mob: <a href="tel:9833733594">9833733594</a> / <a href="tel:7977808759">7977808759</a></p>
+        </div>
+
+        <div class="family-divider">
+          <svg viewBox="0 0 100 8" class="mini-divider">
+            <line x1="10" y1="4" x2="42" y2="4" stroke="#C9A45C" stroke-width="0.6"/>
+            <circle cx="50" cy="4" r="2" fill="#C9A45C"/>
+            <line x1="58" y1="4" x2="90" y2="4" stroke="#C9A45C" stroke-width="0.6"/>
+          </svg>
+        </div>
+
+        <div class="family-group scroll-reveal">
+          <h3 class="family-person-name">ABDUL RAHEEM</h3>
+          <p class="family-relation">Grand S/o</p>
+          <p class="family-detail">Late. PM Aboobacker & Sharifa</p>
+          <p class="family-detail-and">and</p>
+          <p class="family-detail">Late Mohammad Haji & Hawabi</p>
+        </div>
+
+        <div class="family-divider">
+          <svg viewBox="0 0 100 8" class="mini-divider">
+            <line x1="10" y1="4" x2="42" y2="4" stroke="#C9A45C" stroke-width="0.6"/>
+            <circle cx="50" cy="4" r="2" fill="#C9A45C"/>
+            <line x1="58" y1="4" x2="90" y2="4" stroke="#C9A45C" stroke-width="0.6"/>
+          </svg>
+        </div>
+
+        <div class="family-group scroll-reveal">
+          <h3 class="family-person-name">SHADAB FATIMA</h3>
+          <p class="family-relation">D/o</p>
+          <p class="family-detail">Mr. Mohammad Shujathulla</p>
+          <p class="family-detail-and">&</p>
+          <p class="family-detail">Nameera Shujathi</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- INVITATION MESSAGE -->
+    <section class="section section-message scroll-reveal">
+      <div class="section-inner">
+        <div class="gold-ornament-top">
+          <svg viewBox="0 0 120 40" class="ornament-svg small">
+            <path d="M20 20 Q40 8 60 20 Q80 32 100 20" fill="none" stroke="#C9A45C" stroke-width="1"/>
+            <circle cx="60" cy="20" r="2" fill="#C9A45C"/>
+          </svg>
+        </div>
+        <p class="invitation-text">"We cordially invite your esteemed presence with family on the auspicious occasion of the marriage of our son."</p>
+        <div class="presence-block">
+          <p class="presence-line">YOUR PRESENCE</p>
+          <p class="presence-line">YOUR PRAYERS</p>
+          <p class="presence-line">YOUR BLESSINGS</p>
+        </div>
+        <p class="presence-sub">would mean the world to us.</p>
+      </div>
+    </section>
+
+    <!-- SECTION 7: VENUE CARDS -->
+    <section id="section-venue" class="section section-venue scroll-reveal">
+      <div class="section-inner">
+        <h2 class="section-heading">VENUES</h2>
+
+        <div class="venue-card scroll-reveal">
+          <div class="venue-icon">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#C9A45C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <h3 class="venue-card-title">NIKAH</h3>
+          <p class="venue-card-name">Beary's Amity</p>
+          <p class="venue-card-city">Bengaluru</p>
+          <a href="https://www.google.com/maps/search/Beary's+Amity+Bengaluru" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm" aria-label="Get directions to Nikah venue">
+            GET DIRECTIONS
+          </a>
+        </div>
+
+        <div class="venue-card scroll-reveal">
+          <div class="venue-icon">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#C9A45C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <h3 class="venue-card-title">RECEPTION</h3>
+          <p class="venue-card-name">Silvercloud Private Resort</p>
+          <p class="venue-card-sub">Wedding Banquet Hall</p>
+          <p class="venue-card-address">Chalalakkal, Parappur<br>Kerala 680552</p>
+          <a href="https://www.google.com/maps/search/Silvercloud+Private+Resort+Wedding+Banquet+Hall+Chalalakkal+Parappur+Kerala" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm" aria-label="Get directions to Reception venue">
+            GET DIRECTIONS
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- QR CODES -->
+    <section class="section section-qr scroll-reveal">
+      <div class="section-inner">
+        <h2 class="section-heading">VENUE MAPS</h2>
+        <div class="qr-grid">
+          <div class="qr-item scroll-reveal">
+            <canvas id="qr-nikah" class="qr-canvas"></canvas>
+            <p class="qr-label">NIKAH VENUE</p>
+            <p class="qr-sublabel">SCAN FOR DIRECTIONS</p>
+          </div>
+          <div class="qr-item scroll-reveal">
+            <canvas id="qr-reception" class="qr-canvas"></canvas>
+            <p class="qr-label">RECEPTION VENUE</p>
+            <p class="qr-sublabel">SCAN FOR DIRECTIONS</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHARE -->
+    <section class="section section-share scroll-reveal">
+      <div class="section-inner">
+        <button class="btn btn-share" id="share-btn" aria-label="Share Invitation">
+          ↗ SHARE INVITATION
+        </button>
+        <p class="share-copied hidden" id="share-copied">Invitation link copied.</p>
+      </div>
+    </section>
+
+    <!-- SECTION 8: CLOSING -->
+    <section class="section section-closing scroll-reveal">
+      <div class="section-inner">
+        <div class="gold-ornament-top">
+          <svg viewBox="0 0 120 40" class="ornament-svg small">
+            <path d="M20 20 Q40 8 60 20 Q80 32 100 20" fill="none" stroke="#C9A45C" stroke-width="1"/>
+            <path d="M20 20 Q40 32 60 20 Q80 8 100 20" fill="none" stroke="#C9A45C" stroke-width="1"/>
+            <circle cx="60" cy="20" r="2" fill="#C9A45C"/>
+          </svg>
+        </div>
+        <p class="closing-bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</p>
+        <h2 class="closing-groom">ABDUL RAHEEM</h2>
+        <span class="closing-amp">&</span>
+        <h2 class="closing-bride">SHADAB FATIMA</h2>
+        <p class="closing-date">29 • 11 • 2026</p>
+        <div class="closing-divider">
+          <svg viewBox="0 0 100 8" class="mini-divider">
+            <line x1="10" y1="4" x2="42" y2="4" stroke="#C9A45C" stroke-width="0.6"/>
+            <circle cx="50" cy="4" r="2" fill="#C9A45C"/>
+            <line x1="58" y1="4" x2="90" y2="4" stroke="#C9A45C" stroke-width="0.6"/>
+          </svg>
+        </div>
+        <p class="closing-message">"With love, prayers and gratitude."</p>
+        <p class="closing-from">Best compliments from<br>Friends & Family</p>
+        <div class="gold-ornament-bottom closing-ornament">
+          <svg viewBox="0 0 120 40" class="ornament-svg small">
+            <path d="M20 20 Q40 8 60 20 Q80 32 100 20" fill="none" stroke="#C9A45C" stroke-width="0.8"/>
+            <path d="M20 20 Q40 32 60 20 Q80 8 100 20" fill="none" stroke="#C9A45C" stroke-width="0.8"/>
+            <circle cx="60" cy="20" r="1.5" fill="#C9A45C"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FLOATING NAV BUTTON -->
+  <button class="nav-fab hidden" id="nav-fab" aria-label="Open Navigation Menu">
+    <span class="nav-fab-icon">☰</span>
+  </button>
+
+  <!-- BOTTOM SHEET NAV -->
+  <div class="bottom-sheet-backdrop hidden" id="bottom-sheet-backdrop"></div>
+  <div class="bottom-sheet hidden" id="bottom-sheet">
+    <div class="bottom-sheet-handle"></div>
+    <nav class="bottom-sheet-nav" aria-label="Main Navigation">
+      <a href="#section-couple" class="bottom-sheet-link" data-nav>HOME</a>
+      <a href="#section-nikah" class="bottom-sheet-link" data-nav>NIKAH</a>
+      <a href="#section-reception" class="bottom-sheet-link" data-nav>RECEPTION</a>
+      <a href="#section-venue" class="bottom-sheet-link" data-nav>VENUE</a>
+      <a href="#section-family" class="bottom-sheet-link" data-nav>FAMILY</a>
+    </nav>
+  </div>
+
+  <!-- MUSIC TOGGLE & AUDIO -->
+  <button class="music-fab" id="music-fab" aria-label="Click to turn off music" title="Click to turn music off or on">
+    <span class="music-fab-inner">
+      <span class="music-icon-box">
+        <span class="music-note-icon">♫</span>
+        <span class="music-soundwaves" aria-hidden="true">
+          <span class="sound-bar bar-1"></span>
+          <span class="sound-bar bar-2"></span>
+          <span class="sound-bar bar-3"></span>
+        </span>
+      </span>
+      <span class="music-status-text" id="music-status-text">MUSIC ON</span>
+    </span>
+  </button>
+  <div id="music-toast" class="music-toast hidden" aria-live="polite"></div>
+  <audio id="bg-music" loop preload="auto" src="/audio/wedding-bgm.mp3"></audio>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
