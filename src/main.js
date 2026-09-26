@@ -6,8 +6,8 @@ import { initFlowerEffect } from './flowers.js';
    CONFIGURATION
    ============================================================ */
 
-// Wedding date/time — change this single variable to update everywhere
-const WEDDING_DATE = new Date('2026-11-29T18:00:00+05:30'); // After Maghrib ~6pm IST
+// Wedding date/time — 29 November 2026, After Maghrib ~6pm IST
+const WEDDING_DATE = new Date('2026-11-29T18:00:00+05:30');
 
 /* ============================================================
    COUNTDOWN
@@ -75,7 +75,7 @@ updateCountdowns();
 setInterval(updateCountdowns, 1000);
 
 /* ============================================================
-   OPENING ANIMATION
+   OPENING ANIMATION (Smooth & Elegant)
    ============================================================ */
 
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -85,7 +85,6 @@ let animationFast = false;
 
 function runOpeningAnimation() {
   if (reducedMotion) {
-    // Show everything immediately
     animItems.forEach(item => item.classList.add('visible'));
     animationComplete = true;
     return;
@@ -93,26 +92,25 @@ function runOpeningAnimation() {
 
   animItems.forEach(item => {
     const delay = parseFloat(item.dataset.delay) || 0;
-    const effectiveDelay = animationFast ? Math.min(delay * 200, 800) : delay * 1000;
+    const effectiveDelay = animationFast ? Math.min(delay * 200, 600) : delay * 1000;
 
     setTimeout(() => {
       item.classList.add('visible');
     }, effectiveDelay);
   });
 
-  // Mark animation complete
-  const maxDelay = animationFast ? 1600 : 7500;
+  const maxDelay = animationFast ? 900 : 3400;
   setTimeout(() => {
     animationComplete = true;
   }, maxDelay);
 }
 
-// Allow tapping to speed up animation
+// Allow tapping anywhere on cover to accelerate reveal
 document.addEventListener('click', () => {
   if (!animationComplete && !animationFast) {
     animationFast = true;
     animItems.forEach(item => {
-      item.style.transitionDuration = '0.3s';
+      item.style.transitionDuration = '0.35s';
       item.classList.add('visible');
     });
     setTimeout(() => {
@@ -121,14 +119,12 @@ document.addEventListener('click', () => {
   }
 }, { once: false });
 
-// Start animation on load
 window.addEventListener('load', () => {
   requestAnimationFrame(() => {
     runOpeningAnimation();
   });
 });
 
-// Fallback: start after a short delay if load event has already fired
 if (document.readyState === 'complete') {
   requestAnimationFrame(() => {
     runOpeningAnimation();
@@ -147,42 +143,44 @@ const navFab = document.getElementById('nav-fab');
 // Start dynamic flower petals effect on the entry page
 const flowerEffect = initFlowerEffect();
 
-openBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
+if (openBtn) {
+  openBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
 
-  // Celebratory petal burst from button position
-  const rect = openBtn.getBoundingClientRect();
-  const originX = rect.left + rect.width / 2;
-  const originY = rect.top + rect.height / 2;
-  if (flowerEffect && flowerEffect.burst) {
-    flowerEffect.burst(originX, originY, 45);
-  }
-
-  // Start soothing background music on user opening interaction
-  startMusic();
-
-  // Start split animation
-  coverScreen.classList.add('splitting');
-
-  // Show main invitation
-  setTimeout(() => {
-    mainInvitation.classList.add('visible');
-    mainInvitation.setAttribute('aria-hidden', 'false');
-  }, 400);
-
-  // Remove cover and gracefully clean up flower canvas
-  setTimeout(() => {
-    coverScreen.classList.add('hidden');
-    coverScreen.style.display = 'none';
-    if (flowerEffect && flowerEffect.stop) {
-      flowerEffect.stop();
+    // Celebratory petal burst from button position
+    const rect = openBtn.getBoundingClientRect();
+    const originX = rect.left + rect.width / 2;
+    const originY = rect.top + rect.height / 2;
+    if (flowerEffect && flowerEffect.burst) {
+      flowerEffect.burst(originX, originY, 45);
     }
-    // Show nav FAB
-    navFab.classList.remove('hidden');
-    // Initialize scroll reveals
-    initScrollReveal();
-  }, 1500);
-});
+
+    // Ensure music is active on user opening interaction
+    playBGM();
+
+    // Start split animation
+    coverScreen.classList.add('splitting');
+
+    // Show main invitation
+    setTimeout(() => {
+      mainInvitation.classList.add('visible');
+      mainInvitation.setAttribute('aria-hidden', 'false');
+    }, 350);
+
+    // Remove cover and gracefully clean up flower canvas
+    setTimeout(() => {
+      coverScreen.classList.add('hidden');
+      coverScreen.style.display = 'none';
+      if (flowerEffect && flowerEffect.stop) {
+        flowerEffect.stop();
+      }
+      // Show nav FAB
+      if (navFab) navFab.classList.remove('hidden');
+      // Initialize scroll reveals
+      initScrollReveal();
+    }, 1400);
+  });
+}
 
 /* ============================================================
    SCROLL REVEAL
@@ -204,7 +202,7 @@ function initScrollReveal() {
       }
     });
   }, {
-    threshold: 0.15,
+    threshold: 0.12,
     rootMargin: '0px 0px -40px 0px'
   });
 
@@ -222,10 +220,10 @@ const backdrop = document.getElementById('bottom-sheet-backdrop');
 const navLinks = document.querySelectorAll('[data-nav]');
 
 function openSheet() {
+  if (!backdrop || !bottomSheet) return;
   backdrop.classList.remove('hidden');
   bottomSheet.classList.remove('hidden');
 
-  // Force reflow before adding visible class
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       backdrop.classList.add('visible');
@@ -235,6 +233,7 @@ function openSheet() {
 }
 
 function closeSheet() {
+  if (!backdrop || !bottomSheet) return;
   backdrop.classList.remove('visible');
   bottomSheet.classList.remove('visible');
 
@@ -243,15 +242,19 @@ function closeSheet() {
   }, 400);
 }
 
-navFab.addEventListener('click', (e) => {
-  e.stopPropagation();
-  openSheet();
-});
+if (navFab) {
+  navFab.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openSheet();
+  });
+}
 
-backdrop.addEventListener('click', closeSheet);
+if (backdrop) {
+  backdrop.addEventListener('click', closeSheet);
+}
 
 navLinks.forEach(link => {
-  link.addEventListener('click', (e) => {
+  link.addEventListener('click', () => {
     closeSheet();
   });
 });
@@ -276,15 +279,18 @@ async function generateQRCodes() {
 
   try {
     const nikahCanvas = document.getElementById('qr-nikah');
-    await QRCode.toCanvas(nikahCanvas, nikahUrl, qrOptions);
-    // Reset CSS dimensions so clamp() in stylesheet applies
-    nikahCanvas.style.width = '';
-    nikahCanvas.style.height = '';
+    if (nikahCanvas) {
+      await QRCode.toCanvas(nikahCanvas, nikahUrl, qrOptions);
+      nikahCanvas.style.width = '';
+      nikahCanvas.style.height = '';
+    }
 
     const receptionCanvas = document.getElementById('qr-reception');
-    await QRCode.toCanvas(receptionCanvas, receptionUrl, qrOptions);
-    receptionCanvas.style.width = '';
-    receptionCanvas.style.height = '';
+    if (receptionCanvas) {
+      await QRCode.toCanvas(receptionCanvas, receptionUrl, qrOptions);
+      receptionCanvas.style.width = '';
+      receptionCanvas.style.height = '';
+    }
   } catch (err) {
     console.error('QR Code generation error:', err);
   }
@@ -299,36 +305,37 @@ generateQRCodes();
 const shareBtn = document.getElementById('share-btn');
 const shareCopied = document.getElementById('share-copied');
 
-shareBtn.addEventListener('click', async () => {
-  const shareData = {
-    title: 'Nikah Invitation',
-    text: "You're invited to the Nikah of Abdul Raheem & Shadab Fatima.",
-    url: window.location.href
-  };
+if (shareBtn) {
+  shareBtn.addEventListener('click', async () => {
+    const shareData = {
+      title: 'Abdhul Raheem & Shadab Fatima | Nikah Invitation',
+      text: "You're cordially invited to celebrate the Nikah of Abdhul Raheem & Shadab Fatima.",
+      url: window.location.href
+    };
 
-  if (navigator.share) {
-    try {
-      await navigator.share(shareData);
-    } catch (err) {
-      // User cancelled or error
-      if (err.name !== 'AbortError') {
-        fallbackCopy();
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          fallbackCopy();
+        }
       }
+    } else {
+      fallbackCopy();
     }
-  } else {
-    fallbackCopy();
-  }
-});
+  });
+}
 
 function fallbackCopy() {
   navigator.clipboard.writeText(window.location.href).then(() => {
+    if (!shareCopied) return;
     shareCopied.classList.remove('hidden');
     shareCopied.classList.add('show');
     setTimeout(() => {
       shareCopied.classList.remove('show');
     }, 2500);
   }).catch(() => {
-    // Final fallback
     const textArea = document.createElement('textarea');
     textArea.value = window.location.href;
     textArea.style.position = 'fixed';
@@ -338,16 +345,18 @@ function fallbackCopy() {
     document.execCommand('copy');
     document.body.removeChild(textArea);
 
-    shareCopied.classList.remove('hidden');
-    shareCopied.classList.add('show');
-    setTimeout(() => {
-      shareCopied.classList.remove('show');
-    }, 2500);
+    if (shareCopied) {
+      shareCopied.classList.remove('hidden');
+      shareCopied.classList.add('show');
+      setTimeout(() => {
+        shareCopied.classList.remove('show');
+      }, 2500);
+    }
   });
 }
 
 /* ============================================================
-   MUSIC TOGGLE & AUDIO SYSTEM
+   MUSIC TOGGLE & INSTANT AUTOPLAY SYSTEM
    ============================================================ */
 
 const musicFab = document.getElementById('music-fab');
@@ -363,76 +372,112 @@ function showMusicToast(msg) {
   clearTimeout(toastTimeout);
   toastTimeout = setTimeout(() => {
     musicToast.classList.add('hidden');
-  }, 3600);
+  }, 3200);
 }
 
 function updateMusicUI(playing) {
   if (!musicFab) return;
-  const statusText = document.getElementById('music-status-text');
   if (playing) {
     musicFab.classList.add('playing');
     musicFab.classList.remove('paused');
-    musicFab.setAttribute('aria-label', 'Click to turn off music');
-    musicFab.setAttribute('title', 'Click to turn off music');
-    if (statusText) statusText.textContent = 'MUSIC ON';
+    musicFab.setAttribute('aria-label', 'Pause background music');
+    musicFab.setAttribute('title', 'Pause background music');
   } else {
     musicFab.classList.remove('playing');
     musicFab.classList.add('paused');
-    musicFab.setAttribute('aria-label', 'Click to turn on music');
-    musicFab.setAttribute('title', 'Click to turn on music');
-    if (statusText) statusText.textContent = 'MUSIC OFF';
+    musicFab.setAttribute('aria-label', 'Play background music');
+    musicFab.setAttribute('title', 'Play background music');
   }
 }
 
-function fadeAudioIn(audio, targetVolume = 0.6, duration = 1200) {
+function fadeAudio(audio, targetVolume, duration = 1200, onComplete) {
   const steps = 24;
   const stepTime = duration / steps;
-  const volumeStep = (targetVolume - audio.volume) / steps;
+  const startVolume = audio.volume;
+  const volumeStep = (targetVolume - startVolume) / steps;
   let currentStep = 0;
+
   const interval = setInterval(() => {
     currentStep++;
-    audio.volume = Math.min(targetVolume, Math.max(0, audio.volume + volumeStep));
-    if (currentStep >= steps || audio.volume >= targetVolume) {
+    audio.volume = Math.min(1, Math.max(0, audio.volume + volumeStep));
+    if (currentStep >= steps) {
       audio.volume = targetVolume;
       clearInterval(interval);
+      if (onComplete) onComplete();
     }
   }, stepTime);
 }
 
-function startMusic() {
-  if (!bgMusic) return;
+function playBGM() {
+  if (!bgMusic || isPlaying) return;
+  bgMusic.loop = true;
   bgMusic.volume = 0.05;
+
   const playPromise = bgMusic.play();
   if (playPromise !== undefined) {
     playPromise.then(() => {
       isPlaying = true;
       updateMusicUI(true);
-      fadeAudioIn(bgMusic, 0.6, 1200);
-      showMusicToast('♫ Soothing music playing • Click button to turn off');
+      fadeAudio(bgMusic, 0.55, 1400);
+      showMusicToast('♫ Soothing music playing • Tap icon to pause');
     }).catch((err) => {
-      console.log('Autoplay interaction deferred:', err);
+      console.log('Autoplay deferred by browser policy, awaiting first interaction:', err);
+      isPlaying = false;
       updateMusicUI(false);
+      setupFirstInteractionListener();
     });
   }
 }
 
-// Initial state: prepared but paused until user opens or clicks
-updateMusicUI(false);
+function setupFirstInteractionListener() {
+  const events = ['pointerdown', 'touchstart', 'click', 'keydown', 'wheel', 'scroll'];
+  const handler = () => {
+    if (!isPlaying && bgMusic) {
+      bgMusic.volume = 0.05;
+      bgMusic.play().then(() => {
+        isPlaying = true;
+        updateMusicUI(true);
+        fadeAudio(bgMusic, 0.55, 1200);
+        showMusicToast('♫ Soothing music playing • Tap icon to pause');
+      }).catch(() => {});
+    }
+    events.forEach(evt => window.removeEventListener(evt, handler, { capture: true }));
+  };
 
+  events.forEach(evt => {
+    window.addEventListener(evt, handler, { capture: true, once: true });
+  });
+}
+
+// Start music immediately from the very beginning
+playBGM();
+
+// Also trigger on DOMContentLoaded & window load
+document.addEventListener('DOMContentLoaded', () => {
+  if (!isPlaying) playBGM();
+});
+window.addEventListener('load', () => {
+  if (!isPlaying) playBGM();
+});
+
+// Music Toggle Click Handler
 if (musicFab) {
   musicFab.addEventListener('click', (e) => {
     e.stopPropagation();
     if (isPlaying) {
-      bgMusic.pause();
-      isPlaying = false;
-      updateMusicUI(false);
-      showMusicToast('Music turned off');
+      fadeAudio(bgMusic, 0, 400, () => {
+        bgMusic.pause();
+        isPlaying = false;
+        updateMusicUI(false);
+        showMusicToast('Music paused');
+      });
     } else {
+      bgMusic.volume = 0.05;
       bgMusic.play().then(() => {
         isPlaying = true;
         updateMusicUI(true);
-        fadeAudioIn(bgMusic, 0.6, 600);
-        showMusicToast('♫ Music playing • Click button to turn off');
+        fadeAudio(bgMusic, 0.55, 600);
+        showMusicToast('♫ Music playing • Tap icon to pause');
       }).catch((err) => {
         console.log('Play failed:', err);
       });
@@ -441,10 +486,297 @@ if (musicFab) {
 }
 
 /* ============================================================
+   DUAS & BLESSINGS (Interactive Guestbook)
+   ============================================================ */
+
+const DEFAULT_BLESSINGS = [
+  {
+    id: 1,
+    name: "Mr. Shafi Aboobacker & Mrs. Shamshad Shafi",
+    text: "Barakallahu lakuma wa baraka alaikuma wa jama'a bainakuma fee khair! May Allah shower dearest Abdhul Raheem & Shadab Fatima with endless affection, peace, and divine barakah.",
+    time: "Family Blessing",
+    likes: 24
+  },
+  {
+    id: 2,
+    name: "Mr. Mohammad Shujathulla & Family",
+    text: "May this sacred union be the beginning of a life filled with mutual trust, health, tranquility, and infinite bliss in this world and the Aakhirah. Ameen!",
+    time: "Family Blessing",
+    likes: 19
+  },
+  {
+    id: 3,
+    name: "Brothers & Cousins",
+    text: "Heartiest congratulations to our dearest brother Abdhul Raheem and lovely bhabhi Shadab Fatima! May your journey together be radiant and filled with smiles!",
+    time: "Yesterday",
+    likes: 15
+  }
+];
+
+function initDuas() {
+  const duaForm = document.getElementById('dua-form');
+  const duaSender = document.getElementById('dua-sender');
+  const duaMessage = document.getElementById('dua-message');
+  const duaFeedback = document.getElementById('dua-feedback');
+  const duasWall = document.getElementById('duas-wall');
+  const quickChips = document.querySelectorAll('.dua-chip');
+
+  if (!duasWall) return;
+
+  let storedBlessings = [];
+  try {
+    const raw = localStorage.getItem('abdhul_shadab_duas');
+    if (raw) {
+      storedBlessings = JSON.parse(raw);
+    }
+  } catch (e) {
+    console.warn(e);
+  }
+
+  const allBlessings = [...storedBlessings, ...DEFAULT_BLESSINGS];
+
+  function renderDuas() {
+    duasWall.innerHTML = allBlessings.map((dua) => `
+      <div class="dua-card scroll-reveal" data-id="${dua.id}">
+        <div class="dua-card-header">
+          <span class="dua-card-sender">${escapeHTML(dua.name)}</span>
+          <span class="dua-card-time">${escapeHTML(dua.time)}</span>
+        </div>
+        <p class="dua-card-body">"${escapeHTML(dua.text)}"</p>
+        <div class="dua-card-footer">
+          <button type="button" class="dua-like-btn" data-id="${dua.id}" aria-label="Send love for this blessing">
+            <span class="heart-icon">❤️</span> <span class="like-count">${dua.likes || 1}</span>
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+    // Attach like listeners
+    duasWall.querySelectorAll('.dua-like-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const countSpan = btn.querySelector('.like-count');
+        const isLiked = btn.classList.contains('liked');
+        let currentLikes = parseInt(countSpan.textContent, 10) || 0;
+        if (!isLiked) {
+          btn.classList.add('liked');
+          countSpan.textContent = currentLikes + 1;
+        } else {
+          btn.classList.remove('liked');
+          countSpan.textContent = Math.max(1, currentLikes - 1);
+        }
+      });
+    });
+  }
+
+  renderDuas();
+
+  // Quick chips autofill
+  quickChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      const text = chip.getAttribute('data-text');
+      if (duaMessage) {
+        duaMessage.value = text;
+        duaMessage.focus();
+      }
+    });
+  });
+
+  // Submit new Dua
+  if (duaForm) {
+    duaForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const sender = duaSender.value.trim();
+      const message = duaMessage.value.trim();
+
+      if (!sender || !message) return;
+
+      const newDua = {
+        id: Date.now(),
+        name: sender,
+        text: message,
+        time: 'Just now',
+        likes: 1
+      };
+
+      allBlessings.unshift(newDua);
+      storedBlessings.unshift(newDua);
+
+      try {
+        localStorage.setItem('abdhul_shadab_duas', JSON.stringify(storedBlessings));
+      } catch (err) {
+        console.warn(err);
+      }
+
+      renderDuas();
+
+      if (duaFeedback) {
+        duaFeedback.classList.remove('hidden');
+        setTimeout(() => {
+          duaFeedback.classList.add('hidden');
+        }, 3500);
+      }
+
+      // Celebratory burst from submit button
+      const sendBtn = document.getElementById('btn-send-dua');
+      if (sendBtn && flowerEffect && flowerEffect.burst) {
+        const rect = sendBtn.getBoundingClientRect();
+        flowerEffect.burst(rect.left + rect.width / 2, rect.top + rect.height / 2, 25);
+      }
+
+      duaForm.reset();
+    });
+  }
+}
+
+function escapeHTML(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+initDuas();
+
+/* ============================================================
+   CALENDAR & COPY ADDRESS
+   ============================================================ */
+
+function initCalendarAndCopy() {
+  const calModal = document.getElementById('calendar-modal');
+  const calBackdrop = document.getElementById('calendar-modal-backdrop');
+  const calClose = document.getElementById('cal-modal-close');
+  const calTitle = document.getElementById('cal-modal-title');
+  const calSub = document.getElementById('cal-modal-subtitle');
+  const calGoogleLink = document.getElementById('cal-google-link');
+  const calIcalBtn = document.getElementById('cal-ical-btn');
+
+  let currentCalEvent = null;
+
+  const EVENTS = {
+    nikah: {
+      title: "Nikah Ceremony of Abdhul Raheem & Shadab Fatima",
+      description: "Join us in celebrating the Nikah of Abdhul Raheem and Shadab Fatima after Namaz-e-Maghrib at Beary's Amity, Bengaluru.",
+      location: "Beary's Amity, Bengaluru",
+      start: "20261129T123000Z", // 6:00 PM IST = 12:30 UTC
+      end: "20261129T163000Z",
+      displayTitle: "Nikah Ceremony",
+      displaySub: "Sunday, 29 November 2026 • Beary's Amity, Bengaluru"
+    },
+    reception: {
+      title: "Grand Reception: Abdhul Raheem & Shadab Fatima",
+      description: "Wedding Banquet Hall Reception of Abdhul Raheem and Shadab Fatima at Silvercloud Private Resort, Chalalakkal, Parappur, Kerala.",
+      location: "Silvercloud Private Resort, Chalalakkal, Parappur, Kerala 680552",
+      start: "20261208T113000Z", // 5:00 PM IST = 11:30 UTC
+      end: "20261208T163000Z",
+      displayTitle: "Grand Reception",
+      displaySub: "Tuesday, 8 December 2026 • Silvercloud Resort, Kerala"
+    }
+  };
+
+  function openCalModal(eventKey) {
+    currentCalEvent = EVENTS[eventKey] || EVENTS.nikah;
+    if (calTitle) calTitle.textContent = currentCalEvent.displayTitle;
+    if (calSub) calSub.textContent = currentCalEvent.displaySub;
+
+    const gUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(currentCalEvent.title)}&dates=${currentCalEvent.start}/${currentCalEvent.end}&details=${encodeURIComponent(currentCalEvent.description)}&location=${encodeURIComponent(currentCalEvent.location)}`;
+    if (calGoogleLink) calGoogleLink.href = gUrl;
+
+    if (calBackdrop) calBackdrop.classList.remove('hidden');
+    if (calModal) calModal.classList.remove('hidden');
+  }
+
+  function closeCalModal() {
+    if (calBackdrop) calBackdrop.classList.add('hidden');
+    if (calModal) calModal.classList.add('hidden');
+  }
+
+  document.querySelectorAll('.btn-add-cal').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const eventKey = btn.getAttribute('data-event');
+      openCalModal(eventKey);
+    });
+  });
+
+  if (calClose) calClose.addEventListener('click', closeCalModal);
+  if (calBackdrop) calBackdrop.addEventListener('click', closeCalModal);
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeCalModal();
+  });
+
+  if (calIcalBtn) {
+    calIcalBtn.addEventListener('click', () => {
+      if (!currentCalEvent) return;
+      const icsContent = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Abdhul Raheem and Shadab Fatima Nikah//Wedding Invitation//EN',
+        'CALSCALE:GREGORIAN',
+        'BEGIN:VEVENT',
+        `SUMMARY:${currentCalEvent.title}`,
+        `DESCRIPTION:${currentCalEvent.description}`,
+        `LOCATION:${currentCalEvent.location}`,
+        `DTSTART:${currentCalEvent.start}`,
+        `DTEND:${currentCalEvent.end}`,
+        'STATUS:CONFIRMED',
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
+
+      const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.setAttribute('download', `${currentCalEvent.title.replace(/[^a-zA-Z0-9]/g, '_')}.ics`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      closeCalModal();
+    });
+  }
+
+  // Copy Address Buttons
+  document.querySelectorAll('.btn-copy-address').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const textToCopy = btn.getAttribute('data-copy');
+      if (!textToCopy) return;
+
+      const originalHtml = btn.innerHTML;
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        btn.innerHTML = '✓ COPIED!';
+        btn.style.borderColor = 'var(--gold)';
+        btn.style.color = 'var(--gold-light)';
+        setTimeout(() => {
+          btn.innerHTML = originalHtml;
+          btn.style.borderColor = '';
+          btn.style.color = '';
+        }, 2200);
+      }).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = textToCopy;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        btn.innerHTML = '✓ COPIED!';
+        setTimeout(() => {
+          btn.innerHTML = originalHtml;
+        }, 2200);
+      });
+    });
+  });
+}
+
+initCalendarAndCopy();
+
+/* ============================================================
    PREVENT HORIZONTAL SCROLL
    ============================================================ */
 
-// Safety net: prevent any accidental horizontal overflow
 document.addEventListener('DOMContentLoaded', () => {
   document.documentElement.style.overflowX = 'hidden';
   document.body.style.overflowX = 'hidden';
