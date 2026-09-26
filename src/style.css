@@ -300,11 +300,11 @@ body::before {
 }
 
 .designer-name-text {
-  font-family: var(--ff-display);
-  font-size: clamp(34px, 10vw, 54px);
-  font-weight: 600;
-  letter-spacing: 1px;
-  line-height: 1.1;
+  font-family: 'Alex Brush', cursive;
+  font-size: clamp(42px, 12.5vw, 68px);
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  line-height: 1.22;
   margin: 0;
   /* Rich, high-contrast, warm royal gold with deep umber depth */
   background: linear-gradient(135deg, #4A330B 0%, #8C6226 22%, #B38728 45%, #6A4811 75%, #A87D2E 100%);
@@ -737,11 +737,11 @@ body::before {
 }
 
 .couple-name {
-  font-family: var(--ff-display);
-  font-size: clamp(36px, 11vw, 56px);
-  font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: 1px;
+  font-family: 'Alex Brush', cursive;
+  font-size: clamp(40px, 11vw, 62px);
+  font-weight: 400;
+  line-height: 1.22;
+  letter-spacing: 0.5px;
   background: linear-gradient(135deg, #4A330B 0%, #8C6226 22%, #B38728 45%, #6A4811 75%, #A87D2E 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

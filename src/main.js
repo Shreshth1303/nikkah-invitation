@@ -645,6 +645,7 @@ function initDuas() {
       dot.addEventListener('click', () => {
         const targetIdx = parseInt(dot.getAttribute('data-index'), 10);
         scrollToIndex(targetIdx);
+        restartAutoPlay();
       });
     });
   }
@@ -655,10 +656,10 @@ function initDuas() {
       pageIndicator.textContent = `${currentIndex + 1} / ${total}`;
     }
     if (prevBtn) {
-      prevBtn.disabled = currentIndex <= 0;
+      prevBtn.disabled = total <= 1;
     }
     if (nextBtn) {
-      nextBtn.disabled = currentIndex >= total - 1;
+      nextBtn.disabled = total <= 1;
     }
     if (dotsContainer) {
       dotsContainer.querySelectorAll('.dua-dot').forEach((dot, idx) => {
@@ -673,8 +674,14 @@ function initDuas() {
 
   function scrollToIndex(index) {
     const total = allBlessings.length;
-    if (index < 0) index = 0;
-    if (index >= total) index = total - 1;
+    if (total === 0) return;
+
+    // Loop continuously around
+    if (index < 0) {
+      index = total - 1;
+    } else if (index >= total) {
+      index = 0;
+    }
     currentIndex = index;
 
     const cards = track.querySelectorAll('.dua-carousel-card');
@@ -688,6 +695,46 @@ function initDuas() {
     }
     updateNavUI();
   }
+
+  // Auto-play loop for blessings cards
+  let autoPlayTimer = null;
+  const AUTO_PLAY_INTERVAL = 4000; // Change every 4 seconds
+
+  function startAutoPlay() {
+    stopAutoPlay();
+    if (allBlessings.length <= 1) return;
+    autoPlayTimer = setInterval(() => {
+      scrollToIndex(currentIndex + 1);
+    }, AUTO_PLAY_INTERVAL);
+  }
+
+  function stopAutoPlay() {
+    if (autoPlayTimer) {
+      clearInterval(autoPlayTimer);
+      autoPlayTimer = null;
+    }
+  }
+
+  function restartAutoPlay() {
+    stopAutoPlay();
+    startAutoPlay();
+  }
+
+  // Pause on hover
+  track.addEventListener('mouseenter', stopAutoPlay);
+  track.addEventListener('mouseleave', startAutoPlay);
+
+  // Pause on touch interaction, resume after pause
+  track.addEventListener('touchstart', stopAutoPlay, { passive: true });
+  track.addEventListener('touchend', () => {
+    setTimeout(startAutoPlay, 3000);
+  }, { passive: true });
+
+  // Pause when browser tab/window is hidden
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopAutoPlay();
+    else startAutoPlay();
+  });
 
   // Scroll listener to sync indicator on mobile swipe
   let scrollTimeout = null;
@@ -720,6 +767,7 @@ function initDuas() {
     prevBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       scrollToIndex(currentIndex - 1);
+      restartAutoPlay();
     });
   }
 
@@ -727,6 +775,7 @@ function initDuas() {
     nextBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       scrollToIndex(currentIndex + 1);
+      restartAutoPlay();
     });
   }
 
@@ -803,6 +852,7 @@ function initDuas() {
       currentIndex = 0;
       renderCarousel(true);
       scrollToIndex(0);
+      restartAutoPlay();
 
       if (duaFeedback) {
         duaFeedback.textContent = "✨ Alhamdulillah! Your heartfelt blessing has been added!";
@@ -824,6 +874,7 @@ function initDuas() {
   }
 
   renderCarousel();
+  startAutoPlay();
 }
 
 function escapeHTML(str) {
