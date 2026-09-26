@@ -491,85 +491,273 @@ if (musicFab) {
 
 const DEFAULT_BLESSINGS = [
   {
-    id: 1,
+    id: 'blessing-brother-raheem-sabaa',
+    name: "Raheem & Sabaa",
+    relation: "Brother & Sister-in-law",
+    badgeClass: "brother-badge",
+    avatarClass: "brother-avatar",
+    initials: "RS",
+    text: "Barakallahu lakuma wa baraka alaikuma wa jama'a bainakuma fee khair! Heartiest congratulations and infinite love to my dearest brother Abdhul Raheem and our dearest bhabhi Shadab Fatima. May Allah bless your new journey together with boundless affection, peace, happiness, and eternal barakah. Ameen! 🤍✨",
+    time: "Brother's Blessing",
+    likes: 38
+  },
+  {
+    id: 'blessing-groom-parents',
     name: "Mr. Shafi Aboobacker & Mrs. Shamshad Shafi",
-    text: "Barakallahu lakuma wa baraka alaikuma wa jama'a bainakuma fee khair! May Allah shower dearest Abdhul Raheem & Shadab Fatima with endless affection, peace, and divine barakah.",
+    relation: "Parents' Blessing",
+    badgeClass: "family-badge",
+    avatarClass: "family-avatar",
+    initials: "SS",
+    text: "Barakallahu lakuma wa baraka alaikuma wa jama'a bainakuma fee khair! May Allah shower dearest Abdhul Raheem & Shadab Fatima with endless affection, peace, good health, and divine barakah.",
+    time: "Parents' Duas",
+    likes: 29
+  },
+  {
+    id: 'blessing-bride-family',
+    name: "Mr. Mohammad Shujathulla & Family",
+    relation: "Bride's Family",
+    badgeClass: "family-badge",
+    avatarClass: "family-avatar",
+    initials: "MS",
+    text: "May this sacred union be the beginning of a life filled with mutual trust, health, tranquility, and infinite bliss in this world and the Aakhirah. Ameen!",
     time: "Family Blessing",
     likes: 24
   },
   {
-    id: 2,
-    name: "Mr. Mohammad Shujathulla & Family",
-    text: "May this sacred union be the beginning of a life filled with mutual trust, health, tranquility, and infinite bliss in this world and the Aakhirah. Ameen!",
-    time: "Family Blessing",
-    likes: 19
-  },
-  {
-    id: 3,
+    id: 'blessing-cousins',
     name: "Brothers & Cousins",
-    text: "Heartiest congratulations to our dearest brother Abdhul Raheem and lovely bhabhi Shadab Fatima! May your journey together be radiant and filled with smiles!",
-    time: "Yesterday",
-    likes: 15
+    relation: "Cousins & Family",
+    badgeClass: "family-badge",
+    avatarClass: "family-avatar",
+    initials: "BC",
+    text: "Heartiest congratulations to our dearest brother Abdhul Raheem and lovely bhabhi Shadab Fatima! May your journey together be radiant, joyful, and filled with smiles!",
+    time: "Family",
+    likes: 18
   }
 ];
+
+function getInitials(name) {
+  if (!name) return '✦';
+  const clean = name.replace(/^(Mr\.|Mrs\.|Ms\.|Dr\.)\s*/i, '').trim();
+  const parts = clean.split(/[\s&+,/]+/).filter(Boolean);
+  if (parts.length >= 2) {
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
+  return clean.slice(0, 2).toUpperCase() || '✦';
+}
 
 function initDuas() {
   const duaForm = document.getElementById('dua-form');
   const duaSender = document.getElementById('dua-sender');
   const duaMessage = document.getElementById('dua-message');
   const duaFeedback = document.getElementById('dua-feedback');
-  const duasWall = document.getElementById('duas-wall');
   const quickChips = document.querySelectorAll('.dua-chip');
+  const track = document.getElementById('duas-carousel-track');
+  const dotsContainer = document.getElementById('duas-dots-container');
+  const prevBtn = document.getElementById('dua-prev-btn');
+  const nextBtn = document.getElementById('dua-next-btn');
+  const pageIndicator = document.getElementById('carousel-page-indicator');
+  const countText = document.getElementById('duas-count-text');
 
-  if (!duasWall) return;
+  if (!track) return;
 
+  // Load stored blessings
   let storedBlessings = [];
   try {
-    const raw = localStorage.getItem('abdhul_shadab_duas');
+    const raw = localStorage.getItem('abdhul_shadab_duas_v2');
     if (raw) {
       storedBlessings = JSON.parse(raw);
+    } else {
+      const oldRaw = localStorage.getItem('abdhul_shadab_duas');
+      if (oldRaw) {
+        const oldList = JSON.parse(oldRaw);
+        storedBlessings = oldList.filter(item => typeof item.id === 'number' && item.id > 100);
+      }
     }
   } catch (e) {
     console.warn(e);
   }
 
-  const allBlessings = [...storedBlessings, ...DEFAULT_BLESSINGS];
+  // Load liked blessings map
+  let likedMap = {};
+  try {
+    const rawLikes = localStorage.getItem('abdhul_shadab_likes');
+    if (rawLikes) likedMap = JSON.parse(rawLikes);
+  } catch (e) {
+    console.warn(e);
+  }
 
-  function renderDuas() {
-    duasWall.innerHTML = allBlessings.map((dua) => `
-      <div class="dua-card scroll-reveal" data-id="${dua.id}">
-        <div class="dua-card-header">
-          <span class="dua-card-sender">${escapeHTML(dua.name)}</span>
-          <span class="dua-card-time">${escapeHTML(dua.time)}</span>
-        </div>
-        <p class="dua-card-body">"${escapeHTML(dua.text)}"</p>
-        <div class="dua-card-footer">
-          <button type="button" class="dua-like-btn" data-id="${dua.id}" aria-label="Send love for this blessing">
-            <span class="heart-icon">❤️</span> <span class="like-count">${dua.likes || 1}</span>
-          </button>
-        </div>
-      </div>
+  const allBlessings = [...storedBlessings, ...DEFAULT_BLESSINGS];
+  let currentIndex = 0;
+
+  function renderCarousel(highlightFirst = false) {
+    const totalCount = allBlessings.length;
+
+    if (countText) {
+      countText.textContent = `${totalCount} Heartfelt ${totalCount === 1 ? 'Wish' : 'Wishes'}`;
+    }
+
+    track.innerHTML = allBlessings.map((dua, index) => {
+      const isLiked = !!likedMap[dua.id];
+      const displayLikes = (dua.likes || 0) + (isLiked ? 1 : 0);
+      const isJustAdded = highlightFirst && index === 0;
+
+      return `
+        <article class="dua-carousel-card ${isJustAdded ? 'just-added' : ''}" data-id="${dua.id}" data-index="${index}" aria-label="Blessing from ${escapeHTML(dua.name)}">
+          <div class="dua-card-header">
+            <div class="dua-sender-profile">
+              <div class="dua-avatar ${dua.avatarClass || ''}">${escapeHTML(dua.initials || getInitials(dua.name))}</div>
+              <div class="dua-sender-meta">
+                <h4 class="dua-card-sender">${escapeHTML(dua.name)}</h4>
+                <span class="dua-relation-badge ${dua.badgeClass || ''}">✦ ${escapeHTML(dua.relation || 'Guest Wish')}</span>
+              </div>
+            </div>
+            <span class="dua-card-time">${escapeHTML(dua.time || 'Warm Wish')}</span>
+          </div>
+
+          <div class="dua-card-quote-icon">“</div>
+          <p class="dua-card-body">${escapeHTML(dua.text)}</p>
+
+          <div class="dua-card-footer">
+            <button type="button" class="dua-like-btn ${isLiked ? 'liked' : ''}" data-id="${dua.id}" aria-label="Send Mubarak for this blessing">
+              <span class="heart-icon">${isLiked ? '❤️' : '🤍'}</span>
+              <span class="like-label">Mubarak</span>
+              <span class="like-count">${displayLikes}</span>
+            </button>
+          </div>
+        </article>
+      `;
+    }).join('');
+
+    renderDots();
+    attachLikeListeners();
+    updateNavUI();
+  }
+
+  function renderDots() {
+    if (!dotsContainer) return;
+    const total = allBlessings.length;
+    dotsContainer.innerHTML = Array.from({ length: total }, (_, i) => `
+      <button type="button" class="dua-dot ${i === currentIndex ? 'active' : ''}" data-index="${i}" aria-label="Go to wish ${i + 1}"></button>
     `).join('');
 
-    // Attach like listeners
-    duasWall.querySelectorAll('.dua-like-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const countSpan = btn.querySelector('.like-count');
-        const isLiked = btn.classList.contains('liked');
-        let currentLikes = parseInt(countSpan.textContent, 10) || 0;
-        if (!isLiked) {
-          btn.classList.add('liked');
-          countSpan.textContent = currentLikes + 1;
-        } else {
-          btn.classList.remove('liked');
-          countSpan.textContent = Math.max(1, currentLikes - 1);
-        }
+    dotsContainer.querySelectorAll('.dua-dot').forEach(dot => {
+      dot.addEventListener('click', () => {
+        const targetIdx = parseInt(dot.getAttribute('data-index'), 10);
+        scrollToIndex(targetIdx);
       });
     });
   }
 
-  renderDuas();
+  function updateNavUI() {
+    const total = allBlessings.length;
+    if (pageIndicator) {
+      pageIndicator.textContent = `${currentIndex + 1} / ${total}`;
+    }
+    if (prevBtn) {
+      prevBtn.disabled = currentIndex <= 0;
+    }
+    if (nextBtn) {
+      nextBtn.disabled = currentIndex >= total - 1;
+    }
+    if (dotsContainer) {
+      dotsContainer.querySelectorAll('.dua-dot').forEach((dot, idx) => {
+        if (idx === currentIndex) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+    }
+  }
+
+  function scrollToIndex(index) {
+    const total = allBlessings.length;
+    if (index < 0) index = 0;
+    if (index >= total) index = total - 1;
+    currentIndex = index;
+
+    const cards = track.querySelectorAll('.dua-carousel-card');
+    if (cards[index]) {
+      const card = cards[index];
+      const trackPadding = parseInt(window.getComputedStyle(track).paddingLeft, 10) || 0;
+      track.scrollTo({
+        left: card.offsetLeft - trackPadding,
+        behavior: 'smooth'
+      });
+    }
+    updateNavUI();
+  }
+
+  // Scroll listener to sync indicator on mobile swipe
+  let scrollTimeout = null;
+  track.addEventListener('scroll', () => {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      const cards = track.querySelectorAll('.dua-carousel-card');
+      if (!cards.length) return;
+      const scrollPos = track.scrollLeft + track.offsetWidth / 2;
+      let closestIdx = 0;
+      let minDiff = Infinity;
+
+      cards.forEach((c, idx) => {
+        const cardCenter = c.offsetLeft + c.offsetWidth / 2;
+        const diff = Math.abs(scrollPos - cardCenter);
+        if (diff < minDiff) {
+          minDiff = diff;
+          closestIdx = idx;
+        }
+      });
+
+      if (closestIdx !== currentIndex) {
+        currentIndex = closestIdx;
+        updateNavUI();
+      }
+    }, 60);
+  }, { passive: true });
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      scrollToIndex(currentIndex - 1);
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      scrollToIndex(currentIndex + 1);
+    });
+  }
+
+  function attachLikeListeners() {
+    track.querySelectorAll('.dua-like-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = btn.getAttribute('data-id');
+        const countSpan = btn.querySelector('.like-count');
+        const heartSpan = btn.querySelector('.heart-icon');
+        const wasLiked = btn.classList.contains('liked');
+        let currentLikes = parseInt(countSpan.textContent, 10) || 0;
+
+        if (!wasLiked) {
+          btn.classList.add('liked');
+          likedMap[id] = true;
+          countSpan.textContent = currentLikes + 1;
+          if (heartSpan) heartSpan.textContent = '❤️';
+        } else {
+          btn.classList.remove('liked');
+          delete likedMap[id];
+          countSpan.textContent = Math.max(1, currentLikes - 1);
+          if (heartSpan) heartSpan.textContent = '🤍';
+        }
+
+        try {
+          localStorage.setItem('abdhul_shadab_likes', JSON.stringify(likedMap));
+        } catch (err) {}
+      });
+    });
+  }
 
   // Quick chips autofill
   quickChips.forEach(chip => {
@@ -582,7 +770,7 @@ function initDuas() {
     });
   });
 
-  // Submit new Dua
+  // Submit new wish
   if (duaForm) {
     duaForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -592,8 +780,12 @@ function initDuas() {
       if (!sender || !message) return;
 
       const newDua = {
-        id: Date.now(),
+        id: 'dua-' + Date.now(),
         name: sender,
+        relation: "Guest Wish",
+        badgeClass: "guest-badge",
+        avatarClass: "",
+        initials: getInitials(sender),
         text: message,
         time: 'Just now',
         likes: 1
@@ -603,30 +795,35 @@ function initDuas() {
       storedBlessings.unshift(newDua);
 
       try {
-        localStorage.setItem('abdhul_shadab_duas', JSON.stringify(storedBlessings));
+        localStorage.setItem('abdhul_shadab_duas_v2', JSON.stringify(storedBlessings));
       } catch (err) {
         console.warn(err);
       }
 
-      renderDuas();
+      currentIndex = 0;
+      renderCarousel(true);
+      scrollToIndex(0);
 
       if (duaFeedback) {
+        duaFeedback.textContent = "✨ Alhamdulillah! Your heartfelt blessing has been added!";
         duaFeedback.classList.remove('hidden');
         setTimeout(() => {
           duaFeedback.classList.add('hidden');
-        }, 3500);
+        }, 4500);
       }
 
-      // Celebratory burst from submit button
+      // Celebratory flower petal burst from send button
       const sendBtn = document.getElementById('btn-send-dua');
       if (sendBtn && flowerEffect && flowerEffect.burst) {
         const rect = sendBtn.getBoundingClientRect();
-        flowerEffect.burst(rect.left + rect.width / 2, rect.top + rect.height / 2, 25);
+        flowerEffect.burst(rect.left + rect.width / 2, rect.top + rect.height / 2, 35);
       }
 
       duaForm.reset();
     });
   }
+
+  renderCarousel();
 }
 
 function escapeHTML(str) {

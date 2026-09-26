@@ -25,7 +25,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Outfit:wght@200;300;400;500;600&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Outfit:wght@200;300;400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Great+Vibes&family=Cinzel+Decorative:wght@400;600;700&family=Pinyon+Script&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="/src/style.css" />
 </head>
@@ -52,7 +52,7 @@
       <p class="cover-bismillah anim-item" data-delay="0.3">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</p>
       <p class="cover-bismillah-en anim-item" data-delay="0.6">In the name of Allah<br><span class="cover-bismillah-sub">The most beneficent and most merciful</span></p>
 
-      <div class="cover-ornament-divider anim-item" data-delay="0.9">
+      <div class="cover-ornament-divider anim-item" data-delay="0.85">
         <svg viewBox="0 0 200 12" class="divider-svg">
           <line x1="0" y1="6" x2="80" y2="6" stroke="#C9A45C" stroke-width="0.8"/>
           <polygon points="95,2 100,6 95,10" fill="#C9A45C"/>
@@ -61,16 +61,64 @@
         </svg>
       </div>
 
-      <h1 class="cover-groom anim-item gold-shimmer-text" data-delay="1.2">Abdhul Raheem</h1>
-      <span class="cover-ampersand anim-item" data-delay="1.5">&</span>
-      <h1 class="cover-bride anim-item gold-shimmer-text" data-delay="1.8">Shadab Fatima</h1>
+      <!-- Designer Royal Monogram Crest -->
+      <div class="designer-royal-crest anim-item" data-delay="1.0">
+        <div class="crest-shield">
+          <span class="crest-ring-inner"></span>
+          <span class="crest-initials">AR <span class="crest-star">✦</span> SF</span>
+        </div>
+      </div>
 
-      <p class="cover-inshallah anim-item" data-delay="2.1">InshaAllah</p>
+      <!-- Designer Preface Tag -->
+      <div class="designer-preface anim-item" data-delay="1.15">
+        <span class="designer-line left"></span>
+        <span class="designer-preface-title">THE WEDDING CELEBRATION OF</span>
+        <span class="designer-line right"></span>
+      </div>
 
-      <div class="cover-date anim-item" data-delay="2.4">
-        <span class="cover-day">SUNDAY</span>
-        <span class="cover-date-num">29 NOVEMBER</span>
-        <span class="cover-year">2026</span>
+      <!-- Designer Couple Names Showcase -->
+      <div class="designer-couple-frame anim-item" data-delay="1.3">
+        <div class="designer-name-box groom-box">
+          <h1 class="cover-groom designer-name-text">Abdhul Raheem</h1>
+          <div class="designer-name-flourish">
+            <svg viewBox="0 0 160 10" class="name-flourish-svg" aria-hidden="true">
+              <path d="M5 5 Q40 0 80 5 Q120 10 155 5" fill="none" stroke="#B8860B" stroke-width="1.2"/>
+              <circle cx="80" cy="5" r="2.5" fill="#B8860B"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="designer-ampersand-badge anim-item" data-delay="1.6">
+          <span class="amp-wing left">❧</span>
+          <div class="amp-medallion">
+            <span class="amp-glyph">&</span>
+          </div>
+          <span class="amp-wing right">☙</span>
+        </div>
+
+        <div class="designer-name-box bride-box anim-item" data-delay="1.8">
+          <h1 class="cover-bride designer-name-text">Shadab Fatima</h1>
+          <div class="designer-name-flourish">
+            <svg viewBox="0 0 160 10" class="name-flourish-svg" aria-hidden="true">
+              <path d="M5 5 Q40 10 80 5 Q120 0 155 5" fill="none" stroke="#B8860B" stroke-width="1.2"/>
+              <circle cx="80" cy="5" r="2.5" fill="#B8860B"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <p class="cover-inshallah anim-item" data-delay="2.1">
+        <span class="inshallah-sparkle">✦</span> InshaAllah <span class="inshallah-sparkle">✦</span>
+      </p>
+
+      <div class="cover-date anim-item" data-delay="2.3">
+        <div class="designer-date-pill">
+          <span class="designer-date-day">SUNDAY</span>
+          <span class="designer-date-dot">•</span>
+          <span class="designer-date-num">29 NOVEMBER 2026</span>
+          <span class="designer-date-dot">•</span>
+          <span class="designer-date-city">BENGALURU</span>
+        </div>
       </div>
 
       <div class="cover-countdown anim-item" data-delay="2.6">
@@ -407,8 +455,37 @@
           <p class="dua-feedback hidden" id="dua-feedback">Your blessing has been sent with love! 💖</p>
         </form>
 
-        <!-- Duas Wall Display -->
-        <div class="duas-wall" id="duas-wall">
+        <!-- Duas Carousel Header & Counter -->
+        <div class="duas-carousel-header">
+          <div class="duas-counter-badge" id="duas-counter-badge">
+            <span class="counter-sparkle">✦</span>
+            <span id="duas-count-text">4 Heartfelt Wishes</span>
+            <span class="counter-sparkle">✦</span>
+          </div>
+          <div class="duas-carousel-nav">
+            <button type="button" class="carousel-nav-btn prev" id="dua-prev-btn" aria-label="Previous wish" title="Previous wish">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <span class="carousel-page-indicator" id="carousel-page-indicator">1 / 4</span>
+            <button type="button" class="carousel-nav-btn next" id="dua-next-btn" aria-label="Next wish" title="Next wish">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Duas Carousel Container -->
+        <div class="duas-carousel-container" id="duas-carousel-container">
+          <div class="duas-carousel-track" id="duas-carousel-track" role="region" aria-label="Wedding Wishes Carousel" tabindex="0">
+            <!-- Populated dynamically via JS -->
+          </div>
+        </div>
+
+        <!-- Carousel Pagination Dots -->
+        <div class="duas-dots-container" id="duas-dots-container" role="tablist" aria-label="Wishes Carousel Slides">
           <!-- Populated dynamically via JS -->
         </div>
       </div>
