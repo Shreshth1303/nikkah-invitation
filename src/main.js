@@ -419,7 +419,7 @@ function playBGM() {
       isPlaying = true;
       updateMusicUI(true);
       fadeAudio(bgMusic, 0.55, 1400);
-      showMusicToast('♫ Soothing music playing • Tap icon to pause');
+      showMusicToast("♫ Can't Help Falling in Love • Tap to pause");
     }).catch((err) => {
       console.log('Autoplay deferred by browser policy, awaiting first interaction:', err);
       isPlaying = false;
@@ -438,7 +438,7 @@ function setupFirstInteractionListener() {
         isPlaying = true;
         updateMusicUI(true);
         fadeAudio(bgMusic, 0.55, 1200);
-        showMusicToast('♫ Soothing music playing • Tap icon to pause');
+        showMusicToast("♫ Can't Help Falling in Love • Tap to pause");
       }).catch(() => {});
     }
     events.forEach(evt => window.removeEventListener(evt, handler, { capture: true }));
@@ -477,7 +477,7 @@ if (musicFab) {
         isPlaying = true;
         updateMusicUI(true);
         fadeAudio(bgMusic, 0.55, 600);
-        showMusicToast('♫ Music playing • Tap icon to pause');
+        showMusicToast("♫ Can't Help Falling in Love • Tap to pause");
       }).catch((err) => {
         console.log('Play failed:', err);
       });
@@ -491,14 +491,14 @@ if (musicFab) {
 
 const DEFAULT_BLESSINGS = [
   {
-    id: 'blessing-brother-raheem-sabaa',
-    name: "Raheem & Sabaa",
-    relation: "Brother & Sister-in-law",
+    id: 'blessing-brother-rehmaan-sabaa',
+    name: "Rehmaan & Sabaa",
+    relation: "Elder Brother & Sister-in-law",
     badgeClass: "brother-badge",
     avatarClass: "brother-avatar",
     initials: "RS",
-    text: "Barakallahu lakuma wa baraka alaikuma wa jama'a bainakuma fee khair! Heartiest congratulations and infinite love to my dearest brother Abdhul Raheem and our dearest bhabhi Shadab Fatima. May Allah bless your new journey together with boundless affection, peace, happiness, and eternal barakah. Ameen! 🤍✨",
-    time: "Brother's Blessing",
+    text: "Barakallahu lakuma wa baraka alaikuma wa jama'a bainakuma fee khair! Heartiest congratulations and infinite love to my dearest brother Abdhul Raheem and dearest Shadab Fatima. May Allah bless your new journey together with boundless affection, peace, happiness, and eternal barakah. Ameen! 🤍✨",
+    time: "Elder Brother's Blessing",
     likes: 38
   },
   {
@@ -522,17 +522,6 @@ const DEFAULT_BLESSINGS = [
     text: "May this sacred union be the beginning of a life filled with mutual trust, health, tranquility, and infinite bliss in this world and the Aakhirah. Ameen!",
     time: "Family Blessing",
     likes: 24
-  },
-  {
-    id: 'blessing-cousins',
-    name: "Brothers & Cousins",
-    relation: "Cousins & Family",
-    badgeClass: "family-badge",
-    avatarClass: "family-avatar",
-    initials: "BC",
-    text: "Heartiest congratulations to our dearest brother Abdhul Raheem and lovely bhabhi Shadab Fatima! May your journey together be radiant, joyful, and filled with smiles!",
-    time: "Family",
-    likes: 18
   }
 ];
 
@@ -574,6 +563,12 @@ function initDuas() {
         storedBlessings = oldList.filter(item => typeof item.id === 'number' && item.id > 100);
       }
     }
+    // Prevent duplicate elder brother entries from earlier test inputs
+    storedBlessings = storedBlessings.filter(item => {
+      if (!item || !item.name) return false;
+      const n = item.name.toLowerCase();
+      return !n.includes('rehmaan') && !n.includes('raheem') && !n.includes('sabaa');
+    });
   } catch (e) {
     console.warn(e);
   }
